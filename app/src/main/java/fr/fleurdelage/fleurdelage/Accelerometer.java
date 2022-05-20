@@ -11,9 +11,7 @@ public class Accelerometer {
     private Sensor sensor;
     private SensorEventListener sensorEventListener;
     public interface Listener {
-        // create method with all 3
-        // axis translation as argument
-        void onTranslation(float tx, float ty, float ts);
+        void onTranslation(float tx, float ty, float tz);
     }
 
     private Listener listener;
@@ -40,7 +38,7 @@ public class Accelerometer {
         };
     }
     public void register() {
-        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_GAME);
     }
 
     public void unregister() {
