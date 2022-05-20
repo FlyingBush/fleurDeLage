@@ -18,6 +18,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name="fr.fleurdelage.fleurdelage.CallBlocker"
+            android:permission="android.permission.BIND_SCREENING_SERVICE"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.telecom.CallScreeningService"/>
+            </intent-filter>
+        </service>
     </application>
-
 </manifest>
