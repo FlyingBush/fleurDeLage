@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTranslation(float tx, float ty, float tz) {
                 float SVt;
                 SVt= (float) Math.sqrt(Math.pow(tx,2)+Math.pow(ty,2)+Math.pow(tz,2));
-                if (SVt>0.4f)
+                if (SVt>5f)
                     getWindow().getDecorView().setBackgroundColor(Color.RED);
 
                 else {
