@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.emergencybutton">
+
+    <!--
+    CALL_PRIVILEGED like this:Allows an application to call any phone number, including emergency numbers,
+    without going through the Dialer user interface for the user to confirm the call being placed.
+    Not for use by third-party applications.
+    -->
+    <uses-permission android:name="android.permission.CALL_PRIVILEGED"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> <!-- provides access to the network location provider and gps location provider -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> <!-- for network location provider -->
+    <uses-permission android:name="android.permission.INTERNET"/> <!-- to be able to use the network location -->
+
+
+
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.EmergencyButton">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

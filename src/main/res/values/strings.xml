@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Emergency Button</string>
+    <string name="emergency_button">Call Emergency</string>
+    <string name="emergency">Emergency !</string>
+
+<!--
+    <string name="localisation">Get Location</string>
+
+    <string name="longitude">Longitude :</string>
+    <string name="latitude">Latitude :</string>
+
+    <string name="locality">Locality :</string>
+    <string name="country_name">Country name :</string>
+    <string name="address">Address :</string>
+
+-->
+
+</resources>
