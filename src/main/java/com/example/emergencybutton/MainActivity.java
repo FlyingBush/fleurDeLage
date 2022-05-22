@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(String.format(Locale.US, "%s -- %s", wayLatitude.get(), wayLongitude.get()));
 
                 // Format the associated uri
-                Uri uriGeo = Uri.parse("geo:" + loc.getLongitude() + "," + loc.getLatitude());
+                Uri uriGeo = Uri.parse("geo:" + loc.getLatitude() + " , " + loc.getLongitude());
                 SmsManager smsManager = SmsManager.getDefault();
                 smsManager.sendTextMessage("123454568678", null, uriGeo.toString(), null, null);
             } else {
