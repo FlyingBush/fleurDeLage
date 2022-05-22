@@ -17,7 +17,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> <!-- for network location provider -->
     <uses-permission android:name="android.permission.INTERNET"/> <!-- to be able to use the network location -->
 
-
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
 
     <application
