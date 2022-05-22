@@ -6,13 +6,47 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="409dp"
+        android:layout_height="729dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/Emergency"
+            android:layout_width="match_parent"
+            android:layout_height="121dp"
+            android:text="Emergency Button" />
+
+        <Button
+            android:id="@+id/Event"
+            android:layout_width="match_parent"
+            android:layout_height="121dp"
+            android:text="Event planner" />
+
+        <Button
+            android:id="@+id/Internet"
+            android:layout_width="match_parent"
+            android:layout_height="121dp"
+            android:text="Internet" />
+
+        <Button
+            android:id="@+id/Photos"
+            android:layout_width="match_parent"
+            android:layout_height="121dp"
+            android:text="Photos" />
+
+        <Button
+            android:id="@+id/Settings"
+            android:layout_width="match_parent"
+            android:layout_height="121dp"
+            android:text="Settings" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
