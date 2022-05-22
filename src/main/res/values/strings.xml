@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Emergency Button</string>
+    <string name="emergency_button">Call Emergency</string>
+    <string name="emergency">Emergency !</string>
+</resources>
