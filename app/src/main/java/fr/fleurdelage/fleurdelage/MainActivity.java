@@ -1,61 +1,38 @@
 package fr.fleurdelage.fleurdelage;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import java.lang.Math;
 
-import android.graphics.Color;
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.widget.TextView;
+
 
 public class MainActivity extends AppCompatActivity {
-    private Accelerometer accelerometer;
 
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        accelerometer = new Accelerometer(this);
+        if (!ForegroundRunning()){
+        startForegroundService(new Intent( this, Accelerometer.class ) );}
 
-        accelerometer.setListener(new Accelerometer.Listener(){
-            @Override
-            public void onTranslation(float tx, float ty, float tz) {
-                float SVt;
-                SVt= (float) Math.sqrt(Math.pow(tx,2)+Math.pow(ty,2)+Math.pow(tz,2));
-                if (SVt>20f)
-                    getWindow().getDecorView().setBackgroundColor(Color.RED);
-
-                else {
-                getWindow().getDecorView().setBackgroundColor(Color.BLUE);
-
-            }    TextView textView = findViewById(R.id.Acceleration);
-                textView.setText(String.valueOf(SVt));}
-
-
-            });}
-    // create on resume method
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // this will send notification to
-        // both the sensors to register
-        accelerometer.register();
-    }
-
-    // create on pause method
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        // this will send notification in
-        // both the sensors to unregister
-        accelerometer.unregister();
-    }
+        }
+        public boolean ForegroundRunning(){
+            ActivityManager activityManager=(ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            for (ActivityManager.RunningServiceInfo service:activityManager.getRunningServices(Integer.MAX_VALUE)
+                 ) {
+                if (Accelerometer.class.getName().equals(service.service.getClassName())) {
+                return true;}
+            }
+            return false;
+        }
 }
+
 
 
 

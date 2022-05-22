@@ -1,48 +1,79 @@
 package fr.fleurdelage.fleurdelage;
 
-import android.content.Context;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.Service;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
+import android.os.IBinder;
 
-public class Accelerometer {
+
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+
+public class Accelerometer extends Service implements SensorEventListener {
     private SensorManager sensorManager;
     private Sensor sensor;
-    private SensorEventListener sensorEventListener;
-    public interface Listener {
-        void onTranslation(float tx, float ty, float tz);
+    private float acceleration;
+
+
+    @Override
+    public void onSensorChanged(SensorEvent event){
+        float x=event.values[0];
+        float y=event.values[1];
+        float z=event.values[2];
+        acceleration=(float)Math.sqrt(x*x+y*y+z*z);
+        if(acceleration>10f){
+            Intent i = new Intent(Intent.ACTION_MAIN);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.addCategory(Intent.CATEGORY_APP_GALLERY);
+            startActivity(i);
+        }
     }
 
-    private Listener listener;
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-    public void setListener(Listener l) {
-        listener = l;
     }
 
-    Accelerometer(Context context) {
-        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        sensorEventListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent sensorEvent) {
-                if (listener != null) {
-                    listener.onTranslation(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2]);
-                }
-            }
+    @Override
+    public void onCreate(){
+        super.onCreate();
+        sensorManager=(SensorManager) getSystemService(SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        acceleration=0f;
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int i) {
-
-            }
-        };
     }
-    public void register() {
-        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_GAME);
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId){
+        super.onCreate();
+        sensorManager=(SensorManager) getSystemService(SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        acceleration=0f;
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        final String CHANNELID = "Foreground";
+        NotificationChannel channel =new NotificationChannel(CHANNELID,CHANNELID, NotificationManager.IMPORTANCE_LOW);
+        getSystemService(NotificationManager.class).createNotificationChannel(channel);
+        Notification.Builder notification= new Notification.Builder(this,CHANNELID)
+                .setContentText("Fall Detection Operational")
+                .setContentTitle("Fleur de l'age");
+        startForeground(1001, notification.build());
+        return START_STICKY;
     }
 
-    public void unregister() {
-        sensorManager.unregisterListener(sensorEventListener);
+    public void onDestroy(){
+
+    }
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 }
-
