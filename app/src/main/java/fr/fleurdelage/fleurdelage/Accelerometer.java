@@ -21,7 +21,6 @@ import androidx.annotation.RequiresApi;
 public class Accelerometer extends Service implements SensorEventListener {
     private SensorManager sensorManager;
     private Sensor sensor;
-    private float acceleration;
 
 
     @Override
@@ -29,13 +28,19 @@ public class Accelerometer extends Service implements SensorEventListener {
         float x=event.values[0];
         float y=event.values[1];
         float z=event.values[2];
-        acceleration=(float)Math.sqrt(x*x+y*y+z*z);
+        float acceleration = (float) Math.sqrt(x * x + y * y + z * z);
 
-        if(acceleration>10f){
-            Intent i = new Intent(Intent.ACTION_MAIN);
+        if(acceleration >10f){
+            /*Intent i = new Intent(Intent.ACTION_MAIN);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             i.addCategory(Intent.CATEGORY_APP_GALLERY);
-            startActivity(i);
+            startActivity(i);*/
+            Intent intent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(
+                    getApplicationContext().getPackageName());
+            intent.setAction(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
 
