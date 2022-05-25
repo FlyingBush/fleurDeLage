@@ -1,43 +1,65 @@
 package fr.fleurdelage.fleurdelage;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.app.role.RoleManager;
 import android.content.Intent;
+import android.content.UriMatcher;
 import android.os.Build;
 import android.os.Bundle;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+@RequiresApi(api = Build.VERSION_CODES.Q)
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_ID = 1;
+    ActivityResultLauncher<Intent> roleRequest = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            activityResult -> {
+                if (activityResult.getResultCode() == Activity.RESULT_OK) {
+                    // Your app is now the call screening app
+                } else {
+                    // Your app is not the call screening app
+                }
+            });
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
+    ActivityResultLauncher<String> permRequest = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            isGranted -> {
+                if (isGranted) {
+                    // Your app is now the call screening app
+                } else {
+                    // Your app is not the call screening app
+                }
+            });
+
     public void requestRole() {
         RoleManager roleManager = (RoleManager) getSystemService(ROLE_SERVICE);
-        Intent intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_CALL_SCREENING);
-        startActivityForResult(intent, REQUEST_ID);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_ID) {
-            if (resultCode == Activity.RESULT_OK) {
-                // Your app is now the call screening app
-            } else {
-                // Your app is not the call screening app
-            }
+        if (roleManager.isRoleAvailable(RoleManager.ROLE_CALL_SCREENING)) {
+            Intent intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_CALL_SCREENING);
+            roleRequest.launch(intent);
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
+    private void requestPerms() {
+        permRequest.launch("READ_CONTACTS");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         requestRole();
+        requestPerms();
     }
 }
