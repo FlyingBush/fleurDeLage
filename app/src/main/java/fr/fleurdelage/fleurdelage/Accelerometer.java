@@ -13,8 +13,10 @@ import android.os.Build;
 import android.os.IBinder;
 
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
 
 public class Accelerometer extends Service implements SensorEventListener {
     private SensorManager sensorManager;
@@ -23,11 +25,12 @@ public class Accelerometer extends Service implements SensorEventListener {
 
 
     @Override
-    public void onSensorChanged(SensorEvent event){
+    public void onSensorChanged(@NonNull SensorEvent event){
         float x=event.values[0];
         float y=event.values[1];
         float z=event.values[2];
         acceleration=(float)Math.sqrt(x*x+y*y+z*z);
+
         if(acceleration>10f){
             Intent i = new Intent(Intent.ACTION_MAIN);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -46,7 +49,6 @@ public class Accelerometer extends Service implements SensorEventListener {
         super.onCreate();
         sensorManager=(SensorManager) getSystemService(SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        acceleration=0f;
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
     }
@@ -56,7 +58,6 @@ public class Accelerometer extends Service implements SensorEventListener {
         super.onCreate();
         sensorManager=(SensorManager) getSystemService(SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        acceleration=0f;
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
         final String CHANNELID = "Foreground";
         NotificationChannel channel =new NotificationChannel(CHANNELID,CHANNELID, NotificationManager.IMPORTANCE_LOW);
