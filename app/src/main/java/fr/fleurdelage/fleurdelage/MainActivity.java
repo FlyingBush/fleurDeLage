@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestPerms() {
-        permRequest.launch("READ_CONTACTS");
+        permRequest.launch("android.permission.READ_CONTACTS");
     }
 
     @Override
