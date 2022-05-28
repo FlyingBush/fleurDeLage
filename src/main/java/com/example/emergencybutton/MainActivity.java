@@ -2,8 +2,7 @@ package com.example.emergencybutton;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -11,27 +10,37 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements DialogCloseListener {
     private static final int REQUEST_CALL = 1;
-    private int notificationId = 1;
 
+    private DatabaseHandler db;
+
+    private RecyclerView tasksRecyclerView;
+    private ToDoAdapter tasksAdapter;
+    private FloatingActionButton fab;
+
+    private List<ToDoModel> taskList;
     //Initialize variable
     FusedLocationProviderClient fusedLocationProviderClient;
     double latitude;
@@ -43,6 +52,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Objects.requireNonNull(getSupportActionBar()).hide();
+
+        db = new DatabaseHandler(this);
+        db.openDatabase();
+
+        tasksRecyclerView = findViewById(R.id.tasksRecyclerView);
+        tasksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        tasksAdapter = new ToDoAdapter(db,MainActivity.this);
+        tasksRecyclerView.setAdapter(tasksAdapter);
+
+        ItemTouchHelper itemTouchHelper = new
+                ItemTouchHelper(new RecyclerItemTouchHelper(tasksAdapter));
+        itemTouchHelper.attachToRecyclerView(tasksRecyclerView);
+
+        fab = findViewById(R.id.fab);
+
+        taskList = db.getAllTasks();
+        Collections.reverse(taskList);
+
+        tasksAdapter.setTasks(taskList);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddNewTask.newInstance().show(getSupportFragmentManager(), AddNewTask.TAG);
+            }
+        });
 
         LocationCallback locationCallback = new LocationCallback() {
             @Override
@@ -67,9 +104,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fusedLocationProviderClient.requestLocationUpdates(mLocationRequest, locationCallback, null);
 
 
-        // Set onClick Listener
-        findViewById(R.id.setBtn).setOnClickListener(this);
-        findViewById(R.id.cancelBtn).setOnClickListener(this);
 
     }
 
@@ -130,46 +164,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
     @Override
-    public void onClick(View view) {
-        EditText editText = findViewById(R.id.editText);
-        TimePicker timePicker = findViewById(R.id.timePicker);
-
-        // Intent
-        Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
-        intent.putExtra("notificationId", notificationId);
-        intent.putExtra("message", editText.getText().toString());
-
-        // PendingIntent
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                MainActivity.this, 0, intent, PendingIntent.FLAG_IMMUTABLE
-        );
-
-        // AlarmManager
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-
-        switch (view.getId()) {
-            case R.id.setBtn:
-                int hour = timePicker.getCurrentHour();
-                int minute = timePicker.getCurrentMinute();
-
-                // Create time.
-                Calendar startTime = Calendar.getInstance();
-                startTime.set(Calendar.HOUR_OF_DAY, hour);
-                startTime.set(Calendar.MINUTE, minute);
-                startTime.set(Calendar.SECOND, 0);
-                long alarmStartTime = startTime.getTimeInMillis();
-
-                // Set Alarm
-                alarmManager.set(AlarmManager.RTC_WAKEUP, alarmStartTime, pendingIntent);
-                Toast.makeText(this, "Done!", Toast.LENGTH_SHORT).show();
-                break;
-
-            case R.id.cancelBtn:
-                alarmManager.cancel(pendingIntent);
-                Toast.makeText(this, "Canceled.", Toast.LENGTH_SHORT).show();
-                break;
-        }
+    public void handleDialogClose(DialogInterface dialog){
+        taskList = db.getAllTasks();
+        Collections.reverse(taskList);
+        tasksAdapter.setTasks(taskList);
+        tasksAdapter.notifyDataSetChanged();
     }
+
 }

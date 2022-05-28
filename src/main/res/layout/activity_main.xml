@@ -37,25 +37,25 @@
         android:layout_height="wrap_content"
         android:hint="Message"/>
 
-    <TimePicker
-        android:id="@+id/timePicker"
-        android:layout_width="310dp"
-        android:layout_height="360dp"
-        android:layout_marginTop="20dp"/>
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tasksRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tasksText"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:nestedScrollingEnabled="true" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
-        <Button
-            android:id="@+id/setBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="SET"/>
-        <Button
-            android:id="@+id/cancelBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CANCEL"/>
-    </LinearLayout>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="32dp"
+        android:backgroundTint="@android:color/holo_green_dark"
+        android:src="@drawable/ic_baseline_add_24" />
+
+
 </LinearLayout>

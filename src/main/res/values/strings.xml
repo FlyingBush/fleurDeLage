@@ -2,4 +2,8 @@
     <string name="app_name">Emergency Button</string>
     <string name="emergency_button">Call Emergency</string>
     <string name="emergency">Emergency !</string>
+
+    <string name="save">Save</string>
+    <string name="new_task">New Task</string>
+    <string name="tasks">Tasks</string>
 </resources>
