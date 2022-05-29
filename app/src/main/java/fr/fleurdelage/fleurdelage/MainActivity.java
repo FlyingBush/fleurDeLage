@@ -7,7 +7,10 @@ import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
 import android.app.role.RoleManager;
@@ -19,6 +22,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.Manifest;
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -101,6 +110,28 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        checkPermission(Manifest.permission.SEND_SMS,1);
+
+        if (!ForegroundRunning()){
+            startForegroundService(new Intent( this, Accelerometer.class ) );
+        }
+    }
+    public boolean ForegroundRunning(){
+        ActivityManager activityManager=(ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service:activityManager.getRunningServices(Integer.MAX_VALUE)
+             ) {
+            if (Accelerometer.class.getName().equals(service.service.getClassName())) {
+            return true;}
+        }
+        return false;
+    }
+    private void checkPermission(String permission, int requestCode)
+    {
+        // Checking if permission is not granted
+        if (ContextCompat.checkSelfPermission(MainActivity.this, permission) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[] { permission }, requestCode);
+        }
 
     }
 }
