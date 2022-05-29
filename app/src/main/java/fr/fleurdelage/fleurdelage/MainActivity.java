@@ -18,6 +18,12 @@ import android.os.Bundle;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executor;
+
+import fr.fleurdelage.fleurdelage.tellowsdb.PhoneNumber;
+import fr.fleurdelage.fleurdelage.tellowsdb.PhoneNumberDao;
+import fr.fleurdelage.fleurdelage.tellowsdb.PhoneNumberRoomDataBase;
 
 @RequiresApi(api = Build.VERSION_CODES.Q)
 public class MainActivity extends AppCompatActivity {
@@ -61,5 +67,12 @@ public class MainActivity extends AppCompatActivity {
 
         requestRole();
         requestPerms();
+        PhoneNumberRoomDataBase dataBase = PhoneNumberRoomDataBase.getDatabase(getApplicationContext());
+        PhoneNumberDao dao = dataBase.getPhoneNumberDao();
+        Executor executor = dataBase.getQueryExecutor();
+        executor.execute(() -> {
+            List<PhoneNumber> list = dao.getAll();
+            System.out.println(list);
+        });
     }
 }
