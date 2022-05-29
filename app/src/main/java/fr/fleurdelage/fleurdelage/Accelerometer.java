@@ -10,6 +10,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.telephony.SmsManager;
 
@@ -31,18 +32,9 @@ public class Accelerometer extends Service implements SensorEventListener {
         float z=event.values[2];
         float acceleration = (float) Math.sqrt(x * x + y * y + z * z);
 
-        if(acceleration >20f){
-            /*Intent i = new Intent(Intent.ACTION_MAIN);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            i.addCategory(Intent.CATEGORY_APP_GALLERY);
-            startActivity(i);
-            Intent intent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(
-                    getApplicationContext().getPackageName());
-            intent.setAction(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_LAUNCHER);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);*/
-            msg("0666003183");
+
+        if(acceleration >20f ){
+            msg("0666003184");
         }
     }
 
