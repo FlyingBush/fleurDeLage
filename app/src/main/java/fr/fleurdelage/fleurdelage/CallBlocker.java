@@ -12,6 +12,13 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import java.util.List;
+import java.util.concurrent.Executor;
+
+import fr.fleurdelage.fleurdelage.tellowsdb.PhoneNumber;
+import fr.fleurdelage.fleurdelage.tellowsdb.PhoneNumberDao;
+import fr.fleurdelage.fleurdelage.tellowsdb.PhoneNumberRoomDataBase;
+
 @RequiresApi(api = Build.VERSION_CODES.Q)
 public class CallBlocker extends CallScreeningService {
 
@@ -38,9 +45,14 @@ public class CallBlocker extends CallScreeningService {
         if (handle != null && handle.getScheme().equals("tel")) {
             String number = handle.getSchemeSpecificPart();
 
-            if(!hasContactName(number)){
-                responseBuilder.setDisallowCall(true);
-                responseBuilder.setSkipNotification(true);
+            if(!hasContactName(number)){ //+33954433819
+                PhoneNumberRoomDataBase dataBase = PhoneNumberRoomDataBase.getDatabase(getApplicationContext());
+                PhoneNumberDao dao = dataBase.getPhoneNumberDao();
+                PhoneNumber phoneNumber = dao.get(number);
+                if (phoneNumber.score >= 6) {
+                    responseBuilder.setDisallowCall(true);
+                    responseBuilder.setSkipNotification(true);
+                }
             }
 
         }
