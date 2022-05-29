@@ -1,29 +1,8 @@
 package fr.fleurdelage.fleurdelage;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.app.Activity;
-import android.app.role.RoleManager;
-import android.content.Intent;
-import android.content.UriMatcher;
-import android.os.Build;
-
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.Manifest;
 import android.app.ActivityManager;
+import android.app.role.RoleManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,9 +11,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.List;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -56,15 +38,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-    ActivityResultLauncher<String> permRequest = registerForActivityResult(
-            new ActivityResultContracts.RequestPermission(),
-            isGranted -> {
+    ActivityResultLauncher<String[]> permRequest = registerForActivityResult(
+            new ActivityResultContracts.RequestMultiplePermissions(),
+            stringBooleanMap -> stringBooleanMap.forEach((perm, isGranted) -> {
                 if (isGranted) {
                     // Your app is now the call screening app
                 } else {
                     // Your app is not the call screening app
                 }
-            });
+            }));
 
     public void requestRole() {
         RoleManager roleManager = (RoleManager) getSystemService(ROLE_SERVICE);
@@ -75,7 +57,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestPerms() {
-        permRequest.launch("android.permission.READ_CONTACTS");
+        ArrayList<String> perms = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(MainActivity.this, "android.permission.READ_CONTACTS") == PackageManager.PERMISSION_DENIED) {
+            perms.add("android.permission.READ_CONTACTS");
+        }
+        if (ContextCompat.checkSelfPermission(MainActivity.this, "android.permission.READ_CONTACTS") == PackageManager.PERMISSION_DENIED) {
+            perms.add("android.permission.SEND_SMS");
+        }
+        String[] permsArray = perms.toArray(new String[0]);
+        permRequest.launch(permsArray);
     }
 
     @Override
@@ -92,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             List<PhoneNumber> list = dao.getAll();
             System.out.println(list);
         });
-        Button internet = (Button) findViewById(R.id.Internet);
+        Button internet = findViewById(R.id.Internet);
         internet.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -101,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        Button gallery=(Button) findViewById(R.id.Photos);
+        Button gallery= findViewById(R.id.Photos);
         gallery.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -110,8 +100,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
-        checkPermission(Manifest.permission.SEND_SMS,1);
 
         if (!ForegroundRunning()){
             startForegroundService(new Intent( this, Accelerometer.class ) );
@@ -125,13 +113,5 @@ public class MainActivity extends AppCompatActivity {
             return true;}
         }
         return false;
-    }
-    private void checkPermission(String permission, int requestCode)
-    {
-        // Checking if permission is not granted
-        if (ContextCompat.checkSelfPermission(MainActivity.this, permission) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[] { permission }, requestCode);
-        }
-
     }
 }
