@@ -31,7 +31,7 @@ public class Accelerometer extends Service implements SensorEventListener {
         float z=event.values[2];
         float acceleration = (float) Math.sqrt(x * x + y * y + z * z);
 
-        if(acceleration >20f){
+        if(acceleration >17f){
             /*Intent i = new Intent(Intent.ACTION_MAIN);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             i.addCategory(Intent.CATEGORY_APP_GALLERY);
