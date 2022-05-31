@@ -75,6 +75,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        Button calendar = findViewById(R.id.Calendar);
+        calendar.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_MAIN);
+                i.addCategory(Intent.CATEGORY_APP_CALENDAR);
+                startActivity(i);
+            }
+        });
         Button internet = findViewById(R.id.Internet);
         internet.setOnClickListener(new View.OnClickListener(){
             @Override
