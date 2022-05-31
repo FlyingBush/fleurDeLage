@@ -48,13 +48,4 @@
             android:text="Settings" />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/Acceleration"
-        android:layout_width="136dp"
-        android:layout_height="109dp"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="125dp"
-        tools:layout_editor_absoluteY="438dp" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

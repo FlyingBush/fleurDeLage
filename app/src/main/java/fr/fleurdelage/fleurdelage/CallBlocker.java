@@ -33,28 +33,27 @@ public class CallBlocker extends CallScreeningService {
 
         switch (direction) {
             case Call.Details.DIRECTION_INCOMING:
-                System.out.println("Direction Incoming");
+                if (handle != null && handle.getScheme().equals("tel")) {
+                    String number = handle.getSchemeSpecificPart();
+
+                    if(!hasContactName(number)){ //+33954433819
+                        PhoneNumberRoomDataBase dataBase = PhoneNumberRoomDataBase.getDatabase(getApplicationContext());
+                        PhoneNumberDao dao = dataBase.getPhoneNumberDao();
+                        PhoneNumber phoneNumber = dao.get(number);
+                        if(phoneNumber != null) {
+                            if (phoneNumber.score >= 6) {
+                                responseBuilder.setDisallowCall(true);
+                                responseBuilder.setSkipNotification(true);
+                            }
+                        }
+                    }
+
+                }
                 break;
             case Call.Details.DIRECTION_OUTGOING:
-                System.out.println("Direction Outgoing");
                 break;
             case Call.Details.DIRECTION_UNKNOWN:
-                System.out.println("Direction Unknown");
                 break;
-        }
-        if (handle != null && handle.getScheme().equals("tel")) {
-            String number = handle.getSchemeSpecificPart();
-
-            if(!hasContactName(number)){ //+33954433819
-                PhoneNumberRoomDataBase dataBase = PhoneNumberRoomDataBase.getDatabase(getApplicationContext());
-                PhoneNumberDao dao = dataBase.getPhoneNumberDao();
-                PhoneNumber phoneNumber = dao.get(number);
-                if (phoneNumber.score >= 6) {
-                    responseBuilder.setDisallowCall(true);
-                    responseBuilder.setSkipNotification(true);
-                }
-            }
-
         }
 
         respondToCall(details, responseBuilder.build());
