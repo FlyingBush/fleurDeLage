@@ -27,7 +27,7 @@
             android:id="@+id/Calendar"
             android:layout_width="match_parent"
             android:layout_height="121dp"
-            android:text="Event planner" />
+            android:text="Calendar" />
 
         <Button
             android:id="@+id/Internet"
