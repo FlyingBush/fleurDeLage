@@ -24,7 +24,7 @@
             android:text="Emergency Button" />
 
         <Button
-            android:id="@+id/Event"
+            android:id="@+id/Calendar"
             android:layout_width="match_parent"
             android:layout_height="121dp"
             android:text="Event planner" />
