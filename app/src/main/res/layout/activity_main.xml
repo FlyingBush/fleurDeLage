@@ -8,44 +8,52 @@
 
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="409dp"
-        android:layout_height="729dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
             android:id="@+id/Emergency"
             android:layout_width="match_parent"
             android:layout_height="121dp"
-            android:text="Emergency Button" />
+            android:backgroundTint="@android:color/holo_red_light"
+            android:drawableLeft="@drawable/ic_action_name3"
+            android:text="Emergency Button"
+            android:textColor="@android:color/black" />
 
         <Button
             android:id="@+id/Calendar"
             android:layout_width="match_parent"
             android:layout_height="121dp"
-            android:text="Calendar" />
+            android:drawableLeft="@drawable/ic_action_name"
+            android:text="Calendar"
+            android:textColor="@android:color/black" />
 
         <Button
             android:id="@+id/Internet"
             android:layout_width="match_parent"
             android:layout_height="121dp"
-            android:text="Internet" />
+            android:drawableLeft="@drawable/ic_action_name4"
+            android:text="Internet"
+            android:textColor="@android:color/black" />
 
         <Button
             android:id="@+id/Photos"
             android:layout_width="match_parent"
             android:layout_height="121dp"
-            android:text="Photos" />
+            android:drawableLeft="@drawable/ic_action_name2"
+            android:text="Photos"
+            android:textColor="@android:color/black" />
 
-        <Button
-            android:id="@+id/Settings"
+        <ImageView
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="121dp"
-            android:text="Settings" />
+            android:layout_height="238dp"
+            app:srcCompat="@drawable/ic_logo" />
+
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
