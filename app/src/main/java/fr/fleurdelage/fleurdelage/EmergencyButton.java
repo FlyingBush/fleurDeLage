@@ -58,14 +58,21 @@ public class EmergencyButton extends AppCompatActivity {
         locationManager.removeUpdates(locationListener);
     }
 
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(EmergencyButton.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_CODE);
+            return;
+        }
+        locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
+    }
+
     // Functions to send a message with location
 
     private void sendMessage() {
         while (locationListener.getLocation() == null) {
-            try {
-                TimeUnit.MILLISECONDS.sleep(200);
-            } catch (InterruptedException ignored) {
-            }
         }
         // Format the associated uri
         Uri uriGeo = Uri.parse("geo: " + locationListener.getLatitude() + "," + locationListener.getLongitude());
