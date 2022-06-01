@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="fr.fleurdelage.fleurdelage">
+
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <!-- Emergency button -->
+    <uses-permission android:name="android.permission.CALL_PRIVILEGED"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> <!-- provides access to the network location provider and gps location provider -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> <!-- for network location provider -->
+    <uses-permission android:name="android.permission.INTERNET"/> <!-- to be able to use the network location -->
 
     <application
         android:allowBackup="true"
@@ -10,6 +26,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FleurDeLâge">
         <activity
+            android:name=".EmergencyButton"
+            android:exported="false" />
+
+        <service
+            android:name=".Accelerometer"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -18,6 +43,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".CallBlocker"
+            android:exported="false"
+            android:permission="android.permission.BIND_SCREENING_SERVICE">
+            <intent-filter>
+                <action android:name="android.telecom.CallScreeningService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
