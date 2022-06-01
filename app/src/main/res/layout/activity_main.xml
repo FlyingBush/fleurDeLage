@@ -21,36 +21,34 @@
             android:id="@+id/Emergency"
             android:layout_width="match_parent"
             android:layout_height="121dp"
-            android:text="Emergency Button"
             android:backgroundTint="@android:color/holo_red_light"
-            android:textColor="@android:color/black"
             android:drawableLeft="@drawable/ic_action_name3"
-            />
+            android:text="Emergency Button"
+            android:textColor="@android:color/black" />
 
         <Button
             android:id="@+id/Calendar"
             android:layout_width="match_parent"
             android:layout_height="121dp"
-            android:text="Calendar"
-            android:textColor="@android:color/black"
             android:drawableLeft="@drawable/ic_action_name"
-            />
+            android:text="Calendar"
+            android:textColor="@android:color/black" />
 
         <Button
             android:id="@+id/Internet"
             android:layout_width="match_parent"
             android:layout_height="121dp"
+            android:drawableLeft="@drawable/ic_action_name4"
             android:text="Internet"
-            android:textColor="@android:color/black"
-            android:drawableLeft="@drawable/ic_action_name4"/>
+            android:textColor="@android:color/black" />
 
         <Button
             android:id="@+id/Photos"
             android:layout_width="match_parent"
             android:layout_height="121dp"
+            android:drawableLeft="@drawable/ic_action_name2"
             android:text="Photos"
-            android:textColor="@android:color/black"
-            android:drawableLeft="@drawable/ic_action_name2"/>
+            android:textColor="@android:color/black" />
 
         <ImageView
             android:id="@+id/imageView"
