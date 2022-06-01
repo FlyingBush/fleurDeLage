@@ -42,7 +42,7 @@ public class Accelerometer extends Service implements SensorEventListener {
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);*/
-            msg("0666003183");
+            msg("+33666003183");
         }
     }
 
