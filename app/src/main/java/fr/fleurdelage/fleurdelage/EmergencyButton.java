@@ -25,39 +25,50 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.CancellationTokenSource;
 
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import fr.fleurdelage.fleurdelage.MainActivity;
+import fr.fleurdelage.fleurdelage.utilities.MyLocationListener;
 
 public class EmergencyButton extends AppCompatActivity {
     //Initialize variable
     private static final int REQUEST_CODE = 1;
-    FusedLocationProviderClient fusedLocationProviderClient;
-    double latitude;
-    double longitude;
+    LocationManager locationManager;
+    MyLocationListener locationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emergency_button);
 
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        LocationListener locationListener = new MyLocationListener();
+        locationListener = new MyLocationListener();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(EmergencyButton.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_CODE);
             return;
         }
         locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+                LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        locationManager.removeUpdates(locationListener);
     }
 
     // Functions to send a message with location
 
     private void sendMessage() {
-        System.out.printf(Locale.US, "%s -- %s%n", latitude, longitude);
-
+        while (locationListener.getLocation() == null) {
+            try {
+                TimeUnit.MILLISECONDS.sleep(200);
+            } catch (InterruptedException ignored) {
+            }
+        }
         // Format the associated uri
-        Uri uriGeo = Uri.parse("geo: " + latitude + "," + longitude);
+        Uri uriGeo = Uri.parse("geo: " + locationListener.getLatitude() + "," + locationListener.getLongitude());
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage("+33666003183", null, "SEND HELP TO\n" + uriGeo.toString(), null, null);
     }
@@ -79,20 +90,5 @@ public class EmergencyButton extends AppCompatActivity {
             makeCall();
             sendMessage();
         }
-    }
-
-    private class MyLocationListener implements LocationListener {
-
-        @Override
-        public void onLocationChanged(Location loc) {
-            latitude = loc.getLatitude();
-            longitude = loc.getLongitude();
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {}
-
-        @Override
-        public void onProviderEnabled(String provider) {}
     }
 }
